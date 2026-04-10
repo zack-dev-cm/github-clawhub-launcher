@@ -1,0 +1,5 @@
+interface:
+  display_name: "GitHub + ClawHub Launcher"
+  short_description: "Prepare and publish a GitHub repo plus ClawHub package from one local project folder"
+  default_prompt: "Use $github-clawhub-launcher to create a launch manifest, check the public release surface, render release notes, and print the exact GitHub and ClawHub publish commands for a local project."
+
