@@ -9,6 +9,20 @@ and a ClawHub package without rebuilding the process from memory each time.
 
 Pair it with `publish-guard` when you want a leak and public-surface audit before you ship.
 
+## Proof
+
+```bash
+status: publish-ready
+
+## GitHub
+git add .
+git commit -m 'Initial public release: ...'
+gh repo create OWNER/REPO --public ...
+
+## ClawHub
+npx --yes clawhub publish ...
+```
+
 ## Quick Start
 
 ```bash
@@ -66,4 +80,3 @@ python3 skill/github-clawhub-launcher/scripts/render_launcher_commands.py \
 ## License
 
 MIT
-
