@@ -79,4 +79,4 @@ python3 skill/github-clawhub-launcher/scripts/render_launcher_commands.py \
 
 ## License
 
-MIT
+MIT No Attribution (MIT-0)

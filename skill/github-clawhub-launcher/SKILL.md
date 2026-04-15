@@ -2,7 +2,7 @@
 name: github-clawhub-launcher
 description: Public ClawHub skill for preparing, checking, and publishing a GitHub repo plus ClawHub package from one local project folder.
 homepage: https://github.com/zack-dev-cm/github-clawhub-launcher
-license: MIT
+license: MIT-0
 user-invocable: true
 metadata: {"openclaw":{"homepage":"https://github.com/zack-dev-cm/github-clawhub-launcher","skillKey":"github-clawhub-launcher","requires":{"anyBins":["python3","python","git","gh","npx"]}}}
 ---
