@@ -2,6 +2,7 @@
 name: github-clawhub-launcher
 description: Public ClawHub skill for preparing, checking, and publishing a GitHub repo plus ClawHub package from one local project folder.
 homepage: https://github.com/zack-dev-cm/github-clawhub-launcher
+license: MIT
 user-invocable: true
 metadata: {"openclaw":{"homepage":"https://github.com/zack-dev-cm/github-clawhub-launcher","skillKey":"github-clawhub-launcher","requires":{"anyBins":["python3","python","git","gh","npx"]}}}
 ---
@@ -84,4 +85,3 @@ Use `publish-guard` first when you need a public-surface audit.
   - Render concise release notes from the manifest.
 - `scripts/render_launcher_commands.py`
   - Render a ready-to-run GitHub and ClawHub publish command sheet from the manifest.
-
