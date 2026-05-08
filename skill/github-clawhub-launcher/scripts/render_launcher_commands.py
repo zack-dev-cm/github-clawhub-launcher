@@ -51,6 +51,7 @@ def main() -> int:
     topics = [str(item) for item in github.get("topics") or [] if str(item).strip()]
     tags = [str(item) for item in clawhub.get("tags") or [] if str(item).strip()]
 
+    launcher_scripts_dir = Path(__file__).resolve().parent
     release_notes_path = f"/tmp/{repo_name}-release.md"
     repo_spec = f"{owner}/{repo_name}" if owner else repo_name
     skill_abs_path = str((repo_root / skill_path).resolve())
@@ -60,7 +61,7 @@ def main() -> int:
         "",
         "## Validation",
         "```bash",
-        f"python3 {q(str((repo_root / skill_path / 'scripts' / 'check_launcher_surface.py').resolve()))} \\",
+        f"python3 {q(str((launcher_scripts_dir / 'check_launcher_surface.py').resolve()))} \\",
         f"  --manifest {q(str(manifest_path))} \\",
         f"  --repo-root {q(str(repo_root))} \\",
         f"  --out {q('/tmp/' + repo_name + '-check.json')}",
@@ -87,7 +88,7 @@ def main() -> int:
 
     lines.extend(
         [
-            f"python3 {q(str((repo_root / skill_path / 'scripts' / 'render_release_notes.py').resolve()))} \\",
+            f"python3 {q(str((launcher_scripts_dir / 'render_release_notes.py').resolve()))} \\",
             f"  --manifest {q(str(manifest_path))} \\",
             f"  --out {q(release_notes_path)}",
             f"gh release create {q(release_tag)} --repo {q(repo_spec)} --title {q(release_title)} --notes-file {q(release_notes_path)}",
