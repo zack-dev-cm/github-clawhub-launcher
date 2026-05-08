@@ -13,3 +13,4 @@ jobs:
         with:
           python-version: "3.11"
       - run: python -m py_compile skill/github-clawhub-launcher/scripts/*.py
+      - run: python -m unittest discover -s tests
