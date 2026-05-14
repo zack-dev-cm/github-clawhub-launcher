@@ -1,7 +1,7 @@
 ---
 name: github-clawhub-launcher
 description: GitHub + ClawHub Launcher is a public ClawHub release-launcher skill. Use it when the user says "github clawhub launcher", "repo release launcher", or wants to prepare, check, and publish a GitHub repo plus ClawHub package from one local project folder.
-version: 1.0.6
+version: 1.0.7
 homepage: https://github.com/zack-dev-cm/github-clawhub-launcher
 license: MIT-0
 user-invocable: true
@@ -18,6 +18,7 @@ Turn a local public-skill project into a repeatable release flow:
 
 - one machine-readable launch manifest
 - one structural check before publish
+- one Auto-review-aligned release review with local Codex usage context
 - one rendered release-note draft
 - one publish command sheet for GitHub and ClawHub
 
@@ -42,15 +43,20 @@ Use `publish-guard` first when you need a public-surface audit.
    - Use `python3 {baseDir}/scripts/check_launcher_surface.py --manifest <json> --repo-root <repo> --out <json>`.
    - Fix missing `README.md`, `LICENSE`, `SKILL.md`, `agents/openai.yaml`, bad semver, or weak description text before publishing.
 
-3. Render release notes.
+3. Review release readiness.
+   - Use `python3 {baseDir}/scripts/review_release_readiness.py --manifest <json> --repo-root <repo> --out <json>`.
+   - Treat the review as an Auto-review-style boundary check: it can block risky publish surfaces, but it does not grant broader permissions.
+   - Use the included Codex session usage counts to decide whether package metadata, changelog wording, or review policy needs a targeted update.
+
+4. Render release notes.
    - Use `python3 {baseDir}/scripts/render_release_notes.py --manifest <json> --out <md>`.
    - Keep the notes short and aligned with the manifest instead of retyping the release story.
 
-4. Render the publish command sheet.
+5. Render the publish command sheet.
    - Use `python3 {baseDir}/scripts/render_launcher_commands.py --manifest <json> --repo-root <repo> --out <md>`.
    - Review the generated commands before running them.
 
-5. Publish in order.
+6. Publish in order.
    - Commit local changes.
    - Create or connect the GitHub repo.
    - Push `main`.
@@ -74,6 +80,8 @@ Use `publish-guard` first when you need a public-surface audit.
 ### Publish rules
 
 - Run a public-surface audit before the launcher if the repo was recently rewritten.
+- Run the readiness review before creating a GitHub release or ClawHub publish.
+- Auto-review alignment means blocked risky actions require a materially safer alternative or a stop for user decision; do not route around the finding.
 - Create release notes from the manifest so the story stays consistent across GitHub and ClawHub.
 - Keep GitHub topics and ClawHub tags short and concrete.
 - Publish from a clean branch state when possible.
@@ -84,6 +92,8 @@ Use `publish-guard` first when you need a public-surface audit.
   - Create a machine-readable manifest for GitHub repo metadata, ClawHub package metadata, tags, and changelog text.
 - `scripts/check_launcher_surface.py`
   - Validate the local repo structure and basic metadata before publishing.
+- `scripts/review_release_readiness.py`
+  - Combine structural validation, Auto-review risk scanning, and local Codex usage counts into one JSON review gate.
 - `scripts/render_release_notes.py`
   - Render concise release notes from the manifest.
 - `scripts/render_launcher_commands.py`

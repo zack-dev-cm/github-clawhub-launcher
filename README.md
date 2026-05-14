@@ -4,8 +4,9 @@
 
 GitHub + ClawHub Launcher is a small public OpenClaw skill for release preparation.
 It creates a machine-readable launch manifest, checks the public release surface,
-renders GitHub release notes, and prints the exact commands needed to publish a repo
-and a ClawHub package without rebuilding the process from memory each time.
+runs an Auto-review-aligned readiness review with local Codex usage context, renders
+GitHub release notes, and prints the exact commands needed to publish a repo and a
+ClawHub package without rebuilding the process from memory each time.
 
 Pair it with `publish-guard` when you want a leak and public-surface audit before you ship.
 
@@ -44,6 +45,11 @@ python3 skill/github-clawhub-launcher/scripts/check_launcher_surface.py \
   --repo-root . \
   --out /tmp/launcher-check.json
 
+python3 skill/github-clawhub-launcher/scripts/review_release_readiness.py \
+  --manifest /tmp/launcher-manifest.json \
+  --repo-root . \
+  --out /tmp/launcher-review.json
+
 python3 skill/github-clawhub-launcher/scripts/render_release_notes.py \
   --manifest /tmp/launcher-manifest.json \
   --out /tmp/launcher-release.md
@@ -58,6 +64,7 @@ python3 skill/github-clawhub-launcher/scripts/render_launcher_commands.py \
 
 - one manifest for GitHub repo metadata, ClawHub package metadata, tags, and changelog text
 - a structural check for `README.md`, `LICENSE`, `SKILL.md`, `agents/openai.yaml`, semver, slug shape, and description quality
+- an Auto-review-aligned readiness report that checks risky publish surfaces and counts recent local Codex usage mentions
 - release notes rendered from the manifest instead of retyping them each time
 - a ready-to-run publish command sheet for GitHub repo creation, release creation, and ClawHub publish
 
@@ -67,6 +74,7 @@ python3 skill/github-clawhub-launcher/scripts/render_launcher_commands.py \
 - `skill/github-clawhub-launcher/agents/openai.yaml`
 - `skill/github-clawhub-launcher/scripts/init_launcher_manifest.py`
 - `skill/github-clawhub-launcher/scripts/check_launcher_surface.py`
+- `skill/github-clawhub-launcher/scripts/review_release_readiness.py`
 - `skill/github-clawhub-launcher/scripts/render_release_notes.py`
 - `skill/github-clawhub-launcher/scripts/render_launcher_commands.py`
 
@@ -75,6 +83,7 @@ python3 skill/github-clawhub-launcher/scripts/render_launcher_commands.py \
 - turn a local skill repo into a repeatable GitHub + ClawHub launch process
 - stop rewriting the same publish checklist and release notes for every public package
 - validate repo structure before running `gh repo create` and `clawhub publish`
+- review publish risk using Codex Auto-review semantics before running side-effecting release commands
 - keep GitHub repo metadata and ClawHub package metadata aligned
 
 ## License

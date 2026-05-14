@@ -65,6 +65,10 @@ def main() -> int:
         f"  --manifest {q(str(manifest_path))} \\",
         f"  --repo-root {q(str(repo_root))} \\",
         f"  --out {q('/tmp/' + repo_name + '-check.json')}",
+        f"python3 {q(str((launcher_scripts_dir / 'review_release_readiness.py').resolve()))} \\",
+        f"  --manifest {q(str(manifest_path))} \\",
+        f"  --repo-root {q(str(repo_root))} \\",
+        f"  --out {q('/tmp/' + repo_name + '-review.json')}",
         "```",
         "",
         "## GitHub",
@@ -111,6 +115,7 @@ def main() -> int:
             "",
             "## Notes",
             "- Run `publish-guard` before these commands if the public surface changed recently.",
+            "- The review step follows Codex Auto-review semantics: it is a reviewer gate, not a permission grant.",
             "- Review the generated release notes before creating the GitHub release.",
         ]
     )
