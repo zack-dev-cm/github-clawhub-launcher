@@ -1,100 +1,64 @@
 ---
 name: github-clawhub-launcher
-description: GitHub + ClawHub Launcher is a public ClawHub release-launcher skill. Use it when the user says "github clawhub launcher", "repo release launcher", or wants to prepare, check, and publish a GitHub repo plus ClawHub package from one local project folder.
-version: 1.0.7
-homepage: https://github.com/zack-dev-cm/github-clawhub-launcher
-license: MIT-0
-user-invocable: true
-metadata: {"openclaw":{"homepage":"https://github.com/zack-dev-cm/github-clawhub-launcher","skillKey":"github-clawhub-launcher","requires":{"bins":["git","gh","npx"],"anyBins":["python3","python"]},"install":[{"kind":"brew","label":"Install GitHub CLI","formula":"gh","bins":["gh"]}]}}
+description: Review GitHub and ClawHub release plans, metadata, tags, release notes, and final publish order before a human runs any commands.
 ---
 
-# GitHub + ClawHub Launcher
+# GitHub + ClawHub Release Reviewer
 
-Search intent: `github clawhub launcher`, `release launcher`, `github repo publisher`, `clawhub publish flow`
+Use this skill to review a local project release plan for GitHub and ClawHub.
+Keep the work to structured review, metadata QA, release-note drafting, and a
+human-run checklist. Do not create repositories, stage files, push branches,
+create releases, publish ClawHub packages, or read unrelated local logs.
 
-## Goal
+## Inputs
 
-Turn a local public-skill project into a repeatable release flow:
+Ask only for missing release-critical details:
 
-- one machine-readable launch manifest
-- one structural check before publish
-- one Auto-review-aligned release review with local Codex usage context
-- one rendered release-note draft
-- one publish command sheet for GitHub and ClawHub
+- repository name and intended owner,
+- skill folder path and ClawHub slug,
+- public display name and one-line description,
+- version, changelog, license, tags, and GitHub topics,
+- README and support-policy status,
+- current `git status` summary if the user has it,
+- intended publish order and any known blockers.
 
-This skill is for launch preparation and execution order, not leak detection.
-Use `publish-guard` first when you need a public-surface audit.
+Do not request credentials, tokens, session cookies, recovery data, private
+repository contents, private session transcripts, or unrelated local logs.
 
-## Use This Skill When
+## Review Workflow
 
-- the user wants to publish a local repo to GitHub and ClawHub together
-- the project already has a public `README.md` and a skill folder
-- you want a release manifest instead of free-form publish notes
-- you need a clean command plan for `gh repo create`, `gh release create`, and `clawhub publish`
-- you want GitHub topics, ClawHub tags, version, slug, and changelog text kept in one place
+1. Confirm the release target: repo owner, repo name, skill path, ClawHub slug,
+   display name, version, and license.
+2. Check public metadata: README presence, SKILL.md presence, agents metadata,
+   short description, tags, topics, and changelog.
+3. Check release-surface risk: accidental secrets, local paths, private project
+   names, private customer data, private prompts, unpublished screenshots, or
+   wording that should not appear in a public listing.
+4. Check command readiness at a high level. The human should review `git status`,
+   inspect staged files, run tests, push intentionally, create the GitHub
+   release, and publish the ClawHub package only after the checklist is clean.
+5. Draft release notes from user-provided facts. Keep them concise and avoid
+   claims that are not backed by the repo or release artifacts.
+6. Return a final readiness verdict and a human-run checklist.
 
-## Quick Start
+## Output
 
-1. Initialize the launch manifest.
-   - Use `python3 {baseDir}/scripts/init_launcher_manifest.py --out <json> --repo-name <repo> --skill-path skill/<slug> --slug <slug> --version 1.0.0 --name <public name> --description <one-line pitch>`.
-   - Add repeatable `--topic` and `--tag` flags for GitHub and ClawHub metadata.
+Return:
 
-2. Check the public release surface.
-   - Use `python3 {baseDir}/scripts/check_launcher_surface.py --manifest <json> --repo-root <repo> --out <json>`.
-   - Fix missing `README.md`, `LICENSE`, `SKILL.md`, `agents/openai.yaml`, bad semver, or weak description text before publishing.
+- verdict: `ready`, `needs edits`, or `do not publish`,
+- metadata fixes,
+- public-surface wording fixes,
+- release-note draft,
+- test and audit checklist,
+- final human-run publish order.
 
-3. Review release readiness.
-   - Use `python3 {baseDir}/scripts/review_release_readiness.py --manifest <json> --repo-root <repo> --out <json>`.
-   - Treat the review as an Auto-review-style boundary check: it can block risky publish surfaces, but it does not grant broader permissions.
-   - Use the included Codex session usage counts to decide whether package metadata, changelog wording, or review policy needs a targeted update.
+## Guardrails
 
-4. Render release notes.
-   - Use `python3 {baseDir}/scripts/render_release_notes.py --manifest <json> --out <md>`.
-   - Keep the notes short and aligned with the manifest instead of retyping the release story.
-
-5. Render the publish command sheet.
-   - Use `python3 {baseDir}/scripts/render_launcher_commands.py --manifest <json> --repo-root <repo> --out <md>`.
-   - Review the generated commands before running them.
-
-6. Publish in order.
-   - Commit local changes.
-   - Create or connect the GitHub repo.
-   - Push `main`.
-   - Create the GitHub release.
-   - Publish the ClawHub package.
-
-## Operating Rules
-
-### Manifest rules
-
-- Keep GitHub and ClawHub names aligned unless there is a deliberate slug mismatch.
-- Keep the one-line description public-facing and product-facing.
-- Use semver for the package version and GitHub release tag.
-
-### Structure rules
-
-- Do not publish without `README.md`, `LICENSE`, `SKILL.md`, and `agents/openai.yaml`.
-- Keep the skill folder path explicit in the manifest.
-- Prefer one repo for one public package unless you have a clear reason to bundle more.
-
-### Publish rules
-
-- Run a public-surface audit before the launcher if the repo was recently rewritten.
-- Run the readiness review before creating a GitHub release or ClawHub publish.
-- Auto-review alignment means blocked risky actions require a materially safer alternative or a stop for user decision; do not route around the finding.
-- Create release notes from the manifest so the story stays consistent across GitHub and ClawHub.
-- Keep GitHub topics and ClawHub tags short and concrete.
-- Publish from a clean branch state when possible.
-
-## Bundled Scripts
-
-- `scripts/init_launcher_manifest.py`
-  - Create a machine-readable manifest for GitHub repo metadata, ClawHub package metadata, tags, and changelog text.
-- `scripts/check_launcher_surface.py`
-  - Validate the local repo structure and basic metadata before publishing.
-- `scripts/review_release_readiness.py`
-  - Combine structural validation, Auto-review risk scanning, and local Codex usage counts into one JSON review gate.
-- `scripts/render_release_notes.py`
-  - Render concise release notes from the manifest.
-- `scripts/render_launcher_commands.py`
-  - Render a ready-to-run GitHub and ClawHub publish command sheet from the manifest.
+- Do not run, generate, or encourage blind execution of shell commands.
+- Do not stage all files automatically or recommend publishing from a dirty
+  tree without inspection.
+- Do not create public repos, releases, tags, or ClawHub versions.
+- Do not read browser profiles, credentials, private logs, or unrelated local
+  files.
+- Do not include non-release process wording in public release notes, package
+  descriptions, or listing metadata.
